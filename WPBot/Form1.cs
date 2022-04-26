@@ -36,6 +36,7 @@ namespace WPBot
             string _hitap = hitap[random.Next(0, hitap.Length)];
             Process.Start("whatsapp://send?phone=" + numara + "&text=" + mesaj + " " + _hitap);
             Thread.Sleep(1000);
+            SendKeys.Send("~");
         }
        
     }
