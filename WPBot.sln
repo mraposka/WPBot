@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPBot", "WPBot\WPBot.csproj", "{A08AC0BF-FF52-4C70-A96A-B194B6236126}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A08AC0BF-FF52-4C70-A96A-B194B6236126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A08AC0BF-FF52-4C70-A96A-B194B6236126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A08AC0BF-FF52-4C70-A96A-B194B6236126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A08AC0BF-FF52-4C70-A96A-B194B6236126}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC74ABF5-42F1-4E2A-A798-2F9F1A0D9D2D}
+	EndGlobalSection
+EndGlobal
