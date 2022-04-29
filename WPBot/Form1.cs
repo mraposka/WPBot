@@ -57,9 +57,9 @@ namespace WPBot
         string[] hitap = { "İyi Günler!", "Sağlıklı Günler!", "Kendinize İyi Bakın!", "Sevgilerle!" };
         private void Form1_Load(object sender, EventArgs e)
         {
-            GetSmsGrup();  
+            GetSmsGrup();
         }
-        
+
         private void GetSmsGrup()
         {
             string siteUrl = singleton._url + "smsgrup";
@@ -80,15 +80,10 @@ namespace WPBot
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            listBox1.Items.Add(textBox1.Text);
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             string numara = listBox1.SelectedItem.ToString();
-            string mesaj = textBox2.Text;
+            string mesaj = "asd";
             Random random = new Random();
             string _hitap = hitap[random.Next(0, hitap.Length)];
             Process.Start("whatsapp://send?phone=" + numara + "&text=" + mesaj + " " + _hitap);
@@ -157,9 +152,9 @@ namespace WPBot
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
-            { 
+            {
                 //Kapanıyor
             }
             else if (dialogResult == DialogResult.No)
@@ -167,6 +162,12 @@ namespace WPBot
                 //Kapanmadı
                 e.Cancel = true;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
+            MessageBox.Show(hValue);
         }
     }
 }
