@@ -171,7 +171,29 @@ namespace WPBot
         {
             listBox1.Items.Clear();
         }
+        public void TelefonDeaktif(string tel)
+        { 
 
+            using (WebClient client = new WebClient())
+            {
+                string postUrl = singleton._url + "whatsappkontrol";
+                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+               {
+                   { "Telefon", tel } 
+               });
+                string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
+                 
+                if (result == "1")
+                {
+                     
+                }
+                else  
+                {
+                    TelefonDeaktif(tel);
+                    MessageBox.Show("Hata Algılandı!","Tekrar Deneniyor!");
+                }
+            }
+        }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
@@ -219,7 +241,8 @@ namespace WPBot
                 }
                 else
                 {
-                    listBox2.Items.Add(tel); 
+                    listBox2.Items.Add(tel);
+                    TelefonDeaktif(tel);
                 }
             }
            NotifyIcon();
