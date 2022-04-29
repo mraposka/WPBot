@@ -1,17 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Collections.Specialized;
 namespace WPBot
 {
     public partial class Form1 : Form
@@ -20,11 +25,61 @@ namespace WPBot
         {
             InitializeComponent();
         }
+        public class ComboBoxItem
+        {
+            string displayValue;
+            string hiddenValue;
+
+            // Constructor
+            public ComboBoxItem(string d, string h)
+            {
+                displayValue = d;
+                hiddenValue = h;
+            }
+
+            // Accessor
+            public string HiddenValue
+            {
+                get
+                {
+                    return hiddenValue;
+                }
+            }
+
+            // Override ToString method
+            public override string ToString()
+            {
+                return displayValue;
+            }
+        }
+
+        Singleton singleton = new Singleton();
         string[] hitap = { "İyi Günler!", "Sağlıklı Günler!", "Kendinize İyi Bakın!", "Sevgilerle!" };
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            GetSmsGrup();  
         }
+        
+        private void GetSmsGrup()
+        {
+            string siteUrl = singleton._url + "smsgrup";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            if (httpResponse.StatusCode == HttpStatusCode.OK)
+            {
+                StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                string veri = okuyucu.ReadToEnd();
+                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                for (int i = 0; i < records.Count; i++)
+                {
+                    var record = records[i];
+                    comboBox1.Items.Add(new ComboBoxItem(record.GrupAdi, record.ID));
+                }
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             listBox1.Items.Add(textBox1.Text);
@@ -79,7 +134,7 @@ namespace WPBot
             //Process.Start("whatsapp://send?phone=" + textBox3.Text);
             Thread.Sleep(2000);
             Bitmap ImgToFind1 = new Bitmap(@"C:\Users\Can\Desktop\img.png");
-            
+
             Graphics g = Graphics.FromImage(screenCapture);
 
             g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
@@ -90,13 +145,27 @@ namespace WPBot
 
             Bitmap myPic = ImgToFind1;
 
-            if(IsInCapture(myPic, screenCapture))
+            if (IsInCapture(myPic, screenCapture))
             {
                 MessageBox.Show("Numara Aktif");
             }
             else
             {
                 MessageBox.Show("Numara aktif değil");
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            { 
+                //Kapanıyor
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                //Kapanmadı
+                e.Cancel = true;
             }
         }
     }
