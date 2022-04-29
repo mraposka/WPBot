@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Collections.Specialized;
+using System.Media;
+using System.Reflection;
+
 namespace WPBot
 {
     public partial class Form1 : Form
@@ -52,12 +55,14 @@ namespace WPBot
                 return displayValue;
             }
         }
-
+        Bitmap screenCapture = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
         Singleton singleton = new Singleton();
         string[] hitap = { "İyi Günler!", "Sağlıklı Günler!", "Kendinize İyi Bakın!", "Sevgilerle!" };
         private void Form1_Load(object sender, EventArgs e)
         {
             GetSmsGrup();
+
+            notify_Icon.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
         }
 
         private void GetSmsGrup()
@@ -122,9 +127,8 @@ namespace WPBot
             }
             return false;
         }
-        Bitmap screenCapture = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Test()
         {
             //Process.Start("whatsapp://send?phone=" + textBox3.Text);
             Thread.Sleep(2000);
@@ -164,12 +168,78 @@ namespace WPBot
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
-            MessageBox.Show(hValue);
+            string siteUrl = singleton._url + "smsliste/" + hValue;
+            MessageBox.Show(siteUrl);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            if (httpResponse.StatusCode == HttpStatusCode.OK)
+            {
+                StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                string veri = okuyucu.ReadToEnd();
+                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                for (int i = 0; i < records.Count; i++)
+                {
+                    var record = records[i];
+                    listBox1.Items.Add(record.Telefon);
+                }
+            }
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < listBox1.Items.Count; i++)
+            {
+                string tel = listBox1.Items[i].ToString();
+                Process.Start("whatsapp://send?phone=" + tel);
+                Thread.Sleep(2000);
+                Bitmap ImgToFind1 = new Bitmap(@"C:\Users\Can\Desktop\img.png");
 
+                Graphics g = Graphics.FromImage(screenCapture);
+
+                g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
+                                 Screen.PrimaryScreen.Bounds.Y,
+                                 0, 0,
+                                 screenCapture.Size,
+                                 CopyPixelOperation.SourceCopy);
+
+                Bitmap myPic = ImgToFind1;
+
+                if (IsInCapture(myPic, screenCapture))
+                {
+                    listBox3.Items.Add(tel); 
+                }
+                else
+                {
+                    listBox2.Items.Add(tel); 
+                }
+            }
+           NotifyIcon();
+        }
+        NotifyIcon notify_Icon = new NotifyIcon();
+        void NotifyIcon()
+        { 
+            notify_Icon.Visible = true;
+            notify_Icon.Text = "Kontrol Tamamlandı!";
+            notify_Icon.BalloonTipTitle = "Kontrol";
+            notify_Icon.BalloonTipText = "Kontrol Tamamlandı!";
+            notify_Icon.BalloonTipIcon = ToolTipIcon.Info;
+            notify_Icon.ShowBalloonTip(2000);
+            SystemSounds.Beep.Play();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Test();
         }
     }
 }
