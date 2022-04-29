@@ -30,9 +30,17 @@ namespace WPBot
             public string GrupID { get; set; }
             [JsonProperty(PropertyName = "Durum")]
             public string Durum { get; set; }
+
+            [JsonProperty(PropertyName = "Icerik")]
+            public string Icerik { get; set; }
+            [JsonProperty(PropertyName = "Baslik")]
+            public string Baslik { get; set; }
             [JsonProperty(PropertyName = "Cinsiyet")]
             public string Cinsiyet { get; set; }
-             
+
+            [JsonProperty(PropertyName = "Hitap")]
+            public string Hitap { get; set; }
+
         }
         public string _url = "http://orbilsis.com/smsapi/servis/";
     }

@@ -38,7 +38,7 @@ namespace WPBot
                 displayValue = d;
                 hiddenValue = h;
             }
-
+            
             // Accessor
             public string HiddenValue
             {
