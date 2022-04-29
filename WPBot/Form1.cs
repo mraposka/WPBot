@@ -168,6 +168,8 @@ namespace WPBot
         {
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
             MessageBox.Show(hValue);
+
+
         }
     }
 }
