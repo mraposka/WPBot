@@ -132,8 +132,7 @@ namespace WPBot
                 }
             }
             else
-            {
-                MessageBox.Show("Limit yok");
+            { 
                 //Config çekilcek
                 listBox1.Items.Clear();
                 string siteUrl = singleton._url + "SmsListeToplamLimit/" + hValue;
@@ -202,7 +201,7 @@ namespace WPBot
             SendKeys.Send("~");
         }
         private void button1_Click(object sender, EventArgs e)
-        {
+        {  
             int mesaj = 0;
             for (int sayfa = 0; sayfa < Singleton.sayfaSayisi; sayfa++)
             {
@@ -220,11 +219,11 @@ namespace WPBot
                         break;
                     }
                 } 
-                molaSure.Text = "Mola verildi!";
+                //molaSure.Text = "Mola verildi!";
                 Thread.Sleep(Singleton.beklemeSuresi * 1000);//*60
-                molaSure.Text = "Mola Bitti!";
+                //molaSure.Text = "Mola Bitti!";
                 Thread.Sleep(100);
-                molaSure.Text = "Mola Bitti!";
+                //molaSure.Text = "Mola Bitti!";
                 if (mesaj == Singleton.toplamKayit)
                 {
                     break;
@@ -232,10 +231,26 @@ namespace WPBot
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Singleton.limit = 1;
+            /*DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Application.Exit();
+                //Kapanıyor
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                //Kapanmadı
+                e.Cancel = true;
+            }*/
         }
 
+        private void telefonDefteriFiltreleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form1 form1 = new Form1();
+            this.Hide();
+            form1.ShowDialog();
+        }
     }
 }

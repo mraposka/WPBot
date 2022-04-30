@@ -116,16 +116,17 @@ namespace WPBot
         } 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+           /* DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
+                Application.Exit();
                 //Kapanıyor
             }
             else if (dialogResult == DialogResult.No)
             {
                 //Kapanmadı
                 e.Cancel = true;
-            }
+            }*/
         }
          
         public void TelefonDeaktif(string tel)
