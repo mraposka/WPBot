@@ -48,8 +48,28 @@ namespace WPBot
             }
         }
         Singleton singleton = new Singleton();
+        public void getSmsGrup()
+        {
+            string siteUrl = singleton._url + "smsgrup";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            if (httpResponse.StatusCode == HttpStatusCode.OK)
+            {
+                StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                string veri = okuyucu.ReadToEnd();
+                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                for (int i = 0; i < records.Count; i++)
+                {
+                    var record = records[i];
+                    comboBox2.Items.Add(new ComboBoxItem(record.GrupAdi, record.ID));
+                }
+            }
+        }
         private void Form2_Load(object sender, EventArgs e)
         {
+            getSmsGrup();
             string siteUrl = singleton._url + "hazirsablongrup";
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
             httpWebRequest.ContentType = "application/json";
@@ -83,33 +103,39 @@ namespace WPBot
                     hitap.Add(record.Icerik);
                 }
             }
-        }
-        int _sayac = 1;
-        public void telefonCek(int sayac)
-        {
-            string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
-            string siteUrl = singleton._url + "smsliste/" + hValue+"/"+sayac;
-            MessageBox.Show(siteUrl);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "GET";
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            if (httpResponse.StatusCode == HttpStatusCode.OK)
-            {
-                StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
-                string veri = okuyucu.ReadToEnd();
-                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
-                for (int i = 0; i < records.Count; i++)
+        } 
+        public void telefonCek()
+        { 
+            string hValue = ((ComboBoxItem)comboBox2.SelectedItem).HiddenValue;
+            if (Singleton.limit != 0) { 
+                 for(int i=0; i<Singleton.sayfaSayisi; i++)
                 {
-                    var record = records[i];
-                    listBox1.Items.Add(record.Telefon);
+                    string siteUrl = singleton._url + "smsliste/" + hValue + "/" + i; 
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "GET";
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    if (httpResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                        string veri = okuyucu.ReadToEnd();
+                        List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                        for (int j = 0; j < records.Count; j++)
+                        {
+                            var record = records[j];
+                            if (record.Durum == "1") listBox1.Items.Add(record.Telefon);
+                        }
+                    }
                 }
             }
+            else { 
+                MessageBox.Show("Limit yok");
+                //Config çekilcek
+            }
+            
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            telefonCek(_sayac);
-
+        { 
             string grupId = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
             string siteUrl = singleton._url + "hazirsablonliste/"+grupId;
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
@@ -127,17 +153,22 @@ namespace WPBot
                     menuStrip1.Items.Add(record.Baslik);
                     ToolStripItem item = menuStrip1.Items[menuStrip1.Items.Count - 1];
                     item.Tag = record.ID+":"+record.Icerik;
+                    //item.BackColor = menuStrip1.BackColor;
                 }
             }
         }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            MessageBox.Show(e.ClickedItem.Tag.ToString());
+        { 
             textBox1.Text = e.ClickedItem.Tag.ToString().Split(':')[1];
             Random rnd = new Random();
             int r = rnd.Next(hitap.Count);
             textBox1.Text += " " + hitap[r];
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            telefonCek();
         }
     }
 }

@@ -208,13 +208,13 @@ namespace WPBot
                 StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
                 string veri = okuyucu.ReadToEnd();
                 Singleton.Uygulama record = JsonConvert.DeserializeObject<Singleton.Uygulama>(veri);
-                singleton.sayfaSayisi = Int32.Parse(record.SayfaSayisi);
-                singleton.limit = Int32.Parse(record.Limit);
-                singleton.toplamKayit = Int32.Parse(record.ToplamKayit);
-                singleton.sure = Int32.Parse(record.Sure);
-                singleton.beklemeSuresi = Int32.Parse(record.BeklemeSuresi);
+                Singleton.sayfaSayisi = Int32.Parse(record.SayfaSayisi);
+                Singleton.limit = Int32.Parse(record.Limit);
+                Singleton.toplamKayit = Int32.Parse(record.ToplamKayit);
+                Singleton.sure = Int32.Parse(record.Sure);
+                Singleton.beklemeSuresi = Int32.Parse(record.BeklemeSuresi);
             }
-            for (int i = 0; i < singleton.sayfaSayisi; i++)
+            for (int i = 0; i < Singleton.sayfaSayisi; i++)
             {
                 siteUrl = singleton._url + "smsliste/" + hValue + "/" + i; 
                 httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
@@ -280,6 +280,12 @@ namespace WPBot
         private void button3_Click(object sender, EventArgs e)
         {
             Test();
+        } 
+        private void mesajGönderToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            this.Hide();
+            form2.ShowDialog();
         }
     }
 }
