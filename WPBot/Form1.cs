@@ -55,8 +55,7 @@ namespace WPBot
             }
         }
         Bitmap screenCapture = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-        Singleton singleton = new Singleton();
-        string[] hitap = { "İyi Günler!", "Sağlıklı Günler!", "Kendinize İyi Bakın!", "Sevgilerle!" };
+        Singleton singleton = new Singleton(); 
         private void Form1_Load(object sender, EventArgs e)
         {
             GetSmsGrup();
@@ -82,18 +81,7 @@ namespace WPBot
                     comboBox1.Items.Add(new ComboBoxItem(record.GrupAdi, record.ID));
                 }
             }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string numara = listBox1.SelectedItem.ToString();
-            string mesaj = "asd";
-            Random random = new Random();
-            string _hitap = hitap[random.Next(0, hitap.Length)];
-            Process.Start("whatsapp://send?phone=" + numara + "&text=" + mesaj + " " + _hitap);
-            Thread.Sleep(1000);
-            SendKeys.Send("~");
-        }
+        } 
         private bool IsInCapture(Bitmap searchFor, Bitmap searchIn)
         {
             for (int x = 0; x < searchIn.Width; x++)
@@ -125,34 +113,7 @@ namespace WPBot
                 }
             }
             return false;
-        }
-
-        private void Test()
-        {
-            //Process.Start("whatsapp://send?phone=" + textBox3.Text);
-            Thread.Sleep(2000);
-            Bitmap ImgToFind1 = new Bitmap(@"C:\Users\Can\Desktop\img.png");
-
-            Graphics g = Graphics.FromImage(screenCapture);
-
-            g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
-                             Screen.PrimaryScreen.Bounds.Y,
-                             0, 0,
-                             screenCapture.Size,
-                             CopyPixelOperation.SourceCopy);
-
-            Bitmap myPic = ImgToFind1;
-
-            if (IsInCapture(myPic, screenCapture))
-            {
-                MessageBox.Show("Numara Aktif");
-            }
-            else
-            {
-                MessageBox.Show("Numara aktif değil");
-            }
-        }
-
+        } 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -166,11 +127,7 @@ namespace WPBot
                 e.Cancel = true;
             }
         }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            listBox1.Items.Clear();
-        }
+         
         public void TelefonDeaktif(string tel)
         {
 
@@ -183,12 +140,8 @@ namespace WPBot
                });
                 string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
 
-                if (result == "1")
-                {
-
-                }
-                else
-                {
+                if (result != "1")
+                { 
                     MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
                     TelefonDeaktif(tel);
                 }
@@ -276,11 +229,7 @@ namespace WPBot
             notify_Icon.ShowBalloonTip(2000);
             SystemSounds.Beep.Play();
         }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Test();
-        } 
+         
         private void mesajGönderToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             Form2 form2 = new Form2();

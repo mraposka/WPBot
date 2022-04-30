@@ -41,6 +41,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.mesajIndex = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.molaSure = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -90,6 +94,7 @@
             this.button1.TabIndex = 4;
             this.button1.Text = "Gönder";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // listBox1
             // 
@@ -150,6 +155,7 @@
             this.button3.TabIndex = 11;
             this.button3.Text = "Şablon Ekle";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // comboBox2
             // 
@@ -161,11 +167,55 @@
             this.comboBox2.TabIndex = 12;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(12, 384);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(115, 24);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Mesaj Sırası:";
+            // 
+            // mesajIndex
+            // 
+            this.mesajIndex.AutoSize = true;
+            this.mesajIndex.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mesajIndex.Location = new System.Drawing.Point(133, 384);
+            this.mesajIndex.Name = "mesajIndex";
+            this.mesajIndex.Size = new System.Drawing.Size(20, 24);
+            this.mesajIndex.TabIndex = 14;
+            this.mesajIndex.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(514, 384);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 24);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Mola:";
+            // 
+            // molaSure
+            // 
+            this.molaSure.AutoSize = true;
+            this.molaSure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.molaSure.Location = new System.Drawing.Point(587, 384);
+            this.molaSure.Name = "molaSure";
+            this.molaSure.Size = new System.Drawing.Size(144, 24);
+            this.molaSure.TabIndex = 16;
+            this.molaSure.Text = "Mola Bekleniyor";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 396);
+            this.ClientSize = new System.Drawing.Size(800, 426);
+            this.Controls.Add(this.molaSure);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.mesajIndex);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -180,6 +230,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form2";
             this.Text = "Form2";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.Form2_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -200,5 +251,9 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label mesajIndex;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label molaSure;
     }
 }
