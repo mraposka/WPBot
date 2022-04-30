@@ -10,9 +10,25 @@ namespace WPBot
     internal class Singleton
     {
         public class Uygulama
-        {
+        { 
+        [JsonProperty(PropertyName = "ToplamKayit")]
+        public string ToplamKayit { get; set; } 
+        [JsonProperty(PropertyName = "Limit")]
+        public string Limit { get; set; }
 
-            [JsonProperty(PropertyName = "Mesaj")]
+
+        [JsonProperty(PropertyName = "SayfaSayisi")]
+        public string SayfaSayisi { get; set; }
+
+
+        [JsonProperty(PropertyName = "Sure")]
+        public string Sure { get; set; }
+
+
+        [JsonProperty(PropertyName = "BeklemeSuresi")]
+        public string BeklemeSuresi { get; set; }
+
+        [JsonProperty(PropertyName = "Mesaj")]
             public string Mesaj { get; set; } 
             [JsonProperty(PropertyName = "ID")]
             public string ID { get; set; } 
@@ -42,6 +58,12 @@ namespace WPBot
             public string Hitap { get; set; }
 
         }
+        public int toplamKayit = 0;
+        public int sayfaSayisi = 0;
+        public int sure = 0;
+        public int beklemeSuresi = 0;
+        public int limit = 0;
+
         public string _url = "http://orbilsis.com/smsapi/servis/";
     }
 }

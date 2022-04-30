@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms; 
+using System.Windows.Forms;
 using System.Collections.Specialized;
 using System.Media;
 using System.Reflection;
@@ -38,7 +38,7 @@ namespace WPBot
                 displayValue = d;
                 hiddenValue = h;
             }
-            
+
             // Accessor
             public string HiddenValue
             {
@@ -172,33 +172,33 @@ namespace WPBot
             listBox1.Items.Clear();
         }
         public void TelefonDeaktif(string tel)
-        { 
+        {
 
             using (WebClient client = new WebClient())
             {
                 string postUrl = singleton._url + "whatsappkontrol";
                 var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
                {
-                   { "Telefon", tel } 
+                   { "Telefon", tel }
                });
                 string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
-                 
+
                 if (result == "1")
                 {
-                     
+
                 }
-                else  
+                else
                 {
+                    MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
                     TelefonDeaktif(tel);
-                    MessageBox.Show("Hata Algılandı!","Tekrar Deneniyor!");
                 }
             }
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            listBox1.Items.Clear(); 
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
-            string siteUrl = singleton._url + "smsliste/" + hValue;
-            MessageBox.Show(siteUrl);
+            string siteUrl = singleton._url + "SmsListeToplamLimit/" + hValue;
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
@@ -207,11 +207,30 @@ namespace WPBot
             {
                 StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
                 string veri = okuyucu.ReadToEnd();
-                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
-                for (int i = 0; i < records.Count; i++)
+                Singleton.Uygulama record = JsonConvert.DeserializeObject<Singleton.Uygulama>(veri);
+                singleton.sayfaSayisi = Int32.Parse(record.SayfaSayisi);
+                singleton.limit = Int32.Parse(record.Limit);
+                singleton.toplamKayit = Int32.Parse(record.ToplamKayit);
+                singleton.sure = Int32.Parse(record.Sure);
+                singleton.beklemeSuresi = Int32.Parse(record.BeklemeSuresi);
+            }
+            for (int i = 0; i < singleton.sayfaSayisi; i++)
+            {
+                siteUrl = singleton._url + "smsliste/" + hValue + "/" + i; 
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+                httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                if (httpResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    var record = records[i];
-                    listBox1.Items.Add(record.Telefon);
+                    StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                    string veri = okuyucu.ReadToEnd();
+                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                    for (int j = 0; j < records.Count; j++)
+                    {
+                        var record = records[j];
+                        if(record.Durum=="1")listBox1.Items.Add(record.Telefon);
+                    }
                 }
             }
         }
@@ -237,19 +256,18 @@ namespace WPBot
 
                 if (IsInCapture(myPic, screenCapture))
                 {
-                    listBox3.Items.Add(tel); 
-                }
-                else
-                {
-                    listBox2.Items.Add(tel);
+                    listBox1.Items.Remove(tel);
                     TelefonDeaktif(tel);
                 }
+                else
+                { 
+                }
             }
-           NotifyIcon();
+            NotifyIcon();
         }
         NotifyIcon notify_Icon = new NotifyIcon();
         void NotifyIcon()
-        { 
+        {
             notify_Icon.Visible = true;
             notify_Icon.Text = "Kontrol Tamamlandı!";
             notify_Icon.BalloonTipTitle = "Kontrol";
