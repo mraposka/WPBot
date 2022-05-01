@@ -131,8 +131,7 @@ namespace WPBot
         }
          
         public void TelefonDeaktif(string tel)
-        {
-
+        { 
             using (WebClient client = new WebClient())
             {
                 string postUrl = singleton._url + "whatsappkontrol";
@@ -144,6 +143,24 @@ namespace WPBot
 
                 if (result != "1")
                 { 
+                    MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
+                    TelefonDeaktif(tel);
+                }
+            }
+        }
+        public void TelefonFiltrelendi(string tel)
+        {
+            using (WebClient client = new WebClient())
+            {
+                string postUrl = singleton._url + "whatsappkontrolislem";
+                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+               {
+                   { "Telefon", tel }
+               });
+                string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
+
+                if (result != "1")
+                {
                     MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
                     TelefonDeaktif(tel);
                 }
@@ -171,7 +188,7 @@ namespace WPBot
             }
             for (int i = 0; i < Singleton.sayfaSayisi; i++)
             {
-                siteUrl = singleton._url + "smsliste/" + hValue + "/" + i; 
+                siteUrl = singleton._url + "smsfiltre/" + hValue + "/" + i; 
                 httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "GET";
@@ -184,7 +201,7 @@ namespace WPBot
                     for (int j = 0; j < records.Count; j++)
                     {
                         var record = records[j];
-                        if(record.Durum=="1")listBox1.Items.Add("+90"+record.Telefon);
+                        if(record.Durum=="1" && record.IssFiltre=="0")listBox1.Items.Add("+90"+record.Telefon);
                     }
                 }
             }
@@ -215,7 +232,8 @@ namespace WPBot
                     TelefonDeaktif(tel.Replace("+90", ""));
                 }
                 else
-                { 
+                {
+                    TelefonFiltrelendi(tel.Replace("+90",""));
                 }
             }
             NotifyIcon();

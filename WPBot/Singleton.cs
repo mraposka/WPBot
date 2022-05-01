@@ -16,6 +16,8 @@ namespace WPBot
             [JsonProperty(PropertyName = "Limit")]
             public string Limit { get; set; }
 
+            [JsonProperty(PropertyName = "IssFiltre")]
+            public string IssFiltre { get; set; } 
 
             [JsonProperty(PropertyName = "SayfaSayisi")]
             public string SayfaSayisi { get; set; }
@@ -45,8 +47,7 @@ namespace WPBot
             [JsonProperty(PropertyName = "GrupID")]
             public string GrupID { get; set; }
             [JsonProperty(PropertyName = "Durum")]
-            public string Durum { get; set; }
-
+            public string Durum { get; set; } 
             [JsonProperty(PropertyName = "Icerik")]
             public string Icerik { get; set; }
             [JsonProperty(PropertyName = "Baslik")]

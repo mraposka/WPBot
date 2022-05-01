@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -126,7 +127,7 @@ namespace WPBot
                         for (int j = 0; j < records.Count; j++)
                         {
                             var record = records[j];
-                            if (record.Durum == "1") listBox1.Items.Add("+90" + record.Telefon);
+                            if (record.Durum == "1"&&record.IssFiltre=="1") listBox1.Items.Add("+90" + record.Telefon);
                         }
                     }
                 }
@@ -200,6 +201,17 @@ namespace WPBot
             Thread.Sleep(1000);
             SendKeys.Send("~");
         }
+        public void Gonderildi(string tel)
+        {
+            using (WebClient client = new WebClient())
+            {
+                string postUrl = singleton._url + "mesajgonderildi";
+                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+               {
+                   { "Telefon", tel }
+               }); 
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {  
             int mesaj = 0;
@@ -214,6 +226,7 @@ namespace WPBot
                         Gönder(listBox1.Items[mesajSay].ToString());
                         mesaj++;
                         mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderildi!";
+                        //gonderildi info
                         Thread.Sleep(100);
                         Thread.Sleep(Singleton.sure * 1000);
                     }
@@ -227,6 +240,7 @@ namespace WPBot
                         Gönder(listBox1.Items[limit].ToString());
                         mesaj++;
                         mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
+                        //gonderildi info
                         Thread.Sleep(100);
                         Thread.Sleep(Singleton.sure * 1000);
                         if (mesaj == Singleton.toplamKayit)
