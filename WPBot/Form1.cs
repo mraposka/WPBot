@@ -116,17 +116,18 @@ namespace WPBot
         } 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-           /* DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (dialogResult == DialogResult.Yes)
-            {
-                Application.Exit();
-                //Kapanıyor
-            }
-            else if (dialogResult == DialogResult.No)
-            {
-                //Kapanmadı
-                e.Cancel = true;
-            }*/
+            Application.Exit();
+            /* DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+             if (dialogResult == DialogResult.Yes)
+             {
+                 Application.Exit();
+                 //Kapanıyor
+             }
+             else if (dialogResult == DialogResult.No)
+             {
+                 //Kapanmadı
+                 e.Cancel = true;
+             }*/
         }
          
         public void TelefonDeaktif(string tel)
@@ -183,7 +184,7 @@ namespace WPBot
                     for (int j = 0; j < records.Count; j++)
                     {
                         var record = records[j];
-                        if(record.Durum=="1")listBox1.Items.Add(record.Telefon);
+                        if(record.Durum=="1")listBox1.Items.Add("+90"+record.Telefon);
                     }
                 }
             }
@@ -196,7 +197,7 @@ namespace WPBot
                 string tel = listBox1.Items[i].ToString();
                 Process.Start("whatsapp://send?phone=" + tel);
                 Thread.Sleep(2000);
-                Bitmap ImgToFind1 = new Bitmap(@"C:\Users\Can\Desktop\img.png");
+                Bitmap ImgToFind1 = new Bitmap(@"img.png");
 
                 Graphics g = Graphics.FromImage(screenCapture);
 
@@ -211,7 +212,7 @@ namespace WPBot
                 if (IsInCapture(myPic, screenCapture))
                 {
                     listBox1.Items.Remove(tel);
-                    TelefonDeaktif(tel);
+                    TelefonDeaktif(tel.Replace("+90", ""));
                 }
                 else
                 { 

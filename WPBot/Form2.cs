@@ -126,7 +126,7 @@ namespace WPBot
                         for (int j = 0; j < records.Count; j++)
                         {
                             var record = records[j];
-                            if (record.Durum == "1") listBox1.Items.Add(record.Telefon);
+                            if (record.Durum == "1") listBox1.Items.Add("+90" + record.Telefon);
                         }
                     }
                 }
@@ -173,12 +173,13 @@ namespace WPBot
                     var record = records[i];
                     menuStrip1.Items.Add(record.Baslik);
                     ToolStripItem item = menuStrip1.Items[menuStrip1.Items.Count - 1];
+                    icerik.Add(record.Icerik);
                     item.Tag = record.ID + ":" + record.Icerik;
                     //item.BackColor = menuStrip1.BackColor;
                 }
             }
         }
-
+        List<string> icerik=new List<string>();
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             textBox1.Text = e.ClickedItem.Tag.ToString().Split(':')[1];
@@ -194,9 +195,8 @@ namespace WPBot
         private void Gönder(string tel)
         {
             string mesaj = textBox1.Text;
-            Random random = new Random();
-            string _hitap = hitap[random.Next(0, hitap.Count - 1)];
-            Process.Start("whatsapp://send?phone=" + tel + "&text=" + mesaj);
+            Random random = new Random(); 
+            Process.Start("whatsapp://send?phone=" + tel + "&text=" + icerik[random.Next(0,icerik.Count)] + hitap[random.Next(hitap.Count)]);
             Thread.Sleep(1000);
             SendKeys.Send("~");
         }
@@ -205,26 +205,42 @@ namespace WPBot
             int mesaj = 0;
             for (int sayfa = 0; sayfa < Singleton.sayfaSayisi; sayfa++)
             {
-                for(int limit=sayfa* Singleton.limit; limit<= Singleton.limit+(sayfa* Singleton.limit); limit++)
-                { 
-                    mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderiliyor!";
-                    Thread.Sleep(100);
-                    Gönder(listBox1.Items[limit].ToString());
-                    mesaj++; 
-                    mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
-                    Thread.Sleep(100);
-                    Thread.Sleep(Singleton.sure*1000);
-                    if (mesaj == Singleton.toplamKayit)
+                if (listBox1.Items.Count < Singleton.limit)
+                {
+                    for (int mesajSay = 0; mesajSay < listBox1.Items.Count; mesajSay++)
                     {
-                        break;
+                        mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderiliyor!";
+                        Thread.Sleep(100);
+                        Gönder(listBox1.Items[mesajSay].ToString());
+                        mesaj++;
+                        mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderildi!";
+                        Thread.Sleep(100);
+                        Thread.Sleep(Singleton.sure * 1000);
                     }
-                } 
+                }
+                else
+                {
+                    for (int limit = sayfa * Singleton.limit; limit <= Singleton.limit + (sayfa * Singleton.limit); limit++)
+                    {
+                        mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderiliyor!";
+                        Thread.Sleep(100);
+                        Gönder(listBox1.Items[limit].ToString());
+                        mesaj++;
+                        mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
+                        Thread.Sleep(100);
+                        Thread.Sleep(Singleton.sure * 1000);
+                        if (mesaj == Singleton.toplamKayit)
+                        {
+                            break;
+                        }
+                    }
+                }
                 //molaSure.Text = "Mola verildi!";
                 Thread.Sleep(Singleton.beklemeSuresi * 1000);//*60
                 //molaSure.Text = "Mola Bitti!";
                 Thread.Sleep(100);
                 //molaSure.Text = "Mola Bitti!";
-                if (mesaj == Singleton.toplamKayit)
+                if (mesaj == listBox1.Items.Count)
                 {
                     break;
                 }
@@ -233,6 +249,7 @@ namespace WPBot
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Application.Exit();
             /*DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
