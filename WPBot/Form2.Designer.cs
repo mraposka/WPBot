@@ -41,10 +41,10 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.mesajIndex = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.molaSure = new System.Windows.Forms.Label();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.telefonDefteriFiltreleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -168,27 +168,15 @@
             this.mesajIndex.TabIndex = 14;
             this.mesajIndex.Text = "0";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Enabled = false;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(12, 420);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(56, 24);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Mola:";
-            // 
             // molaSure
             // 
             this.molaSure.AutoSize = true;
-            this.molaSure.Enabled = false;
             this.molaSure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.molaSure.Location = new System.Drawing.Point(85, 420);
             this.molaSure.Name = "molaSure";
-            this.molaSure.Size = new System.Drawing.Size(144, 24);
+            this.molaSure.Size = new System.Drawing.Size(149, 24);
             this.molaSure.TabIndex = 16;
-            this.molaSure.Text = "Mola Bekleniyor";
+            this.molaSure.Text = "Mola Bekleniyor!";
             // 
             // menuStrip2
             // 
@@ -206,6 +194,16 @@
             this.telefonDefteriFiltreleToolStripMenuItem.Size = new System.Drawing.Size(133, 20);
             this.telefonDefteriFiltreleToolStripMenuItem.Text = "Telefon Defteri Filtrele";
             this.telefonDefteriFiltreleToolStripMenuItem.Click += new System.EventHandler(this.telefonDefteriFiltreleToolStripMenuItem_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(12, 420);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 24);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Mola:";
             // 
             // Form2
             // 
@@ -253,9 +251,9 @@
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label mesajIndex;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label molaSure;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem telefonDefteriFiltreleToolStripMenuItem;
+        private System.Windows.Forms.Label label5;
     }
 }
