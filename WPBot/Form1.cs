@@ -1,24 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Specialized;
 using System.Media;
 using System.Reflection;
-
+using Tesseract;
 namespace WPBot
 {
     public partial class Form1 : Form
@@ -55,7 +47,7 @@ namespace WPBot
             }
         }
         Bitmap screenCapture = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-        Singleton singleton = new Singleton(); 
+        Singleton singleton = new Singleton();
         private void Form1_Load(object sender, EventArgs e)
         {
             GetSmsGrup();
@@ -81,7 +73,7 @@ namespace WPBot
                     comboBox1.Items.Add(new ComboBoxItem(record.GrupAdi, record.ID));
                 }
             }
-        } 
+        }
         private bool IsInCapture(Bitmap searchFor, Bitmap searchIn)
         {
             for (int x = 0; x < searchIn.Width; x++)
@@ -113,25 +105,24 @@ namespace WPBot
                 }
             }
             return false;
-        } 
+        }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
-            /* DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-             if (dialogResult == DialogResult.Yes)
-             {
-                 Application.Exit();
-                 //Kapanıyor
-             }
-             else if (dialogResult == DialogResult.No)
-             {
-                 //Kapanmadı
-                 e.Cancel = true;
-             }*/
+            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Singleton.Exit();
+                //Kapanıyor
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                //Kapanmadı
+                e.Cancel = true;
+            }
         }
-         
+
         public void TelefonDeaktif(string tel)
-        { 
+        {
             using (WebClient client = new WebClient())
             {
                 string postUrl = singleton._url + "whatsappkontrol";
@@ -142,7 +133,7 @@ namespace WPBot
                 string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
 
                 if (result != "1")
-                { 
+                {
                     MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
                     TelefonDeaktif(tel);
                 }
@@ -168,7 +159,7 @@ namespace WPBot
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBox1.Items.Clear(); 
+            listBox1.Items.Clear();
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
             string siteUrl = singleton._url + "SmsListeToplamLimit/" + hValue;
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
@@ -188,7 +179,7 @@ namespace WPBot
             }
             for (int i = 0; i < Singleton.sayfaSayisi; i++)
             {
-                siteUrl = singleton._url + "smsfiltre/" + hValue + "/" + i; 
+                siteUrl = singleton._url + "smsfiltre/" + hValue + "/" + i;
                 httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "GET";
@@ -201,7 +192,7 @@ namespace WPBot
                     for (int j = 0; j < records.Count; j++)
                     {
                         var record = records[j];
-                        if(record.Durum=="1" && record.IssFiltre=="0")listBox1.Items.Add("+90"+record.Telefon);
+                        if (record.Durum == "1" && record.IssFiltre == "0") listBox1.Items.Add("+90" + record.Telefon);
                     }
                 }
             }
@@ -209,34 +200,33 @@ namespace WPBot
 
         private void button1_Click(object sender, EventArgs e)
         {
+            List<string> pasif = new List<string>();
             for (int i = 0; i < listBox1.Items.Count; i++)
             {
                 string tel = listBox1.Items[i].ToString();
                 Process.Start("whatsapp://send?phone=" + tel);
                 Thread.Sleep(2000);
-                Bitmap ImgToFind1 = new Bitmap(@"img.png");
-
                 Graphics g = Graphics.FromImage(screenCapture);
-
-                g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
-                                 Screen.PrimaryScreen.Bounds.Y,
-                                 0, 0,
-                                 screenCapture.Size,
-                                 CopyPixelOperation.SourceCopy);
-
-                Bitmap myPic = ImgToFind1;
-
-                if (IsInCapture(myPic, screenCapture))
+                g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, screenCapture.Size, CopyPixelOperation.SourceCopy);
+                var img = new Bitmap(screenCapture);
+                var ocr = new TesseractEngine(@"C:\Users\Can\Desktop\tessdata", "eng", EngineMode.Default);
+                var page = ocr.Process(img);
+                if (page.GetText().Replace(" ", "").Contains("URL") || page.GetText().Replace(" ", "").Contains("TAMAM"))
                 {
-                    listBox1.Items.Remove(tel);
+                    pasif.Add(tel);
                     TelefonDeaktif(tel.Replace("+90", ""));
                 }
                 else
                 {
-                    TelefonFiltrelendi(tel.Replace("+90",""));
+                    TelefonFiltrelendi(tel.Replace("+90", ""));
                 }
             }
+            foreach (string _pasif in pasif)
+            {
+                listBox1.Items.Remove(_pasif);
+            }
             NotifyIcon();
+
         }
         NotifyIcon notify_Icon = new NotifyIcon();
         void NotifyIcon()
@@ -249,12 +239,12 @@ namespace WPBot
             notify_Icon.ShowBalloonTip(2000);
             SystemSounds.Beep.Play();
         }
-         
+
         private void mesajGönderToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             Form2 form2 = new Form2();
             this.Hide();
-            form2.ShowDialog();
+            form2.Show();
         }
     }
 }

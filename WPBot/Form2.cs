@@ -220,7 +220,7 @@ namespace WPBot
             else
             {
                 _sure++;
-                LabelDegis(_sure.ToString() + ". saniye/"+sure.ToString());
+                LabelDegis(_sure.ToString() + ". saniye/" + sure.ToString());
             }
 
         }
@@ -244,7 +244,7 @@ namespace WPBot
                         //gonderildi info 
                         sayac.Enabled = true;
                         sure = Singleton.sure;
-                        Bekle: if (bekleme)
+                    Bekle: if (bekleme)
                         {
                             bekleme = true;
                         }
@@ -261,7 +261,7 @@ namespace WPBot
                         mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
                         sayac.Enabled = true;
                         sure = Singleton.sure;
-                        Bekle2: if (bekleme)
+                    Bekle2: if (bekleme)
                         {
                             bekleme = true;
                         }
@@ -272,10 +272,10 @@ namespace WPBot
                         }
                     }
                 }
-                
+
                 sayac.Enabled = true;
                 sure = Singleton.beklemeSuresi;//dakika olması için *60
-                Bekle3: if (bekleme)
+            Bekle3: if (bekleme)
                 {
                     bekleme = true;
                 }
@@ -288,24 +288,23 @@ namespace WPBot
         }
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
-            /*DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult dialogResult = MessageBox.Show("Programı sonlandırmak istiyor musunuz?", "Program Sonlandırılıyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
-                Application.Exit();
+                Singleton.Exit();
                 //Kapanıyor
             }
             else if (dialogResult == DialogResult.No)
             {
                 //Kapanmadı
                 e.Cancel = true;
-            }*/
+            }
         }
         private void telefonDefteriFiltreleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form1 form1 = new Form1();
             this.Hide();
-            form1.ShowDialog();
+            form1.Show();
         }
     }
 }

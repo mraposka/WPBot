@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace WPBot
 {
@@ -14,22 +10,15 @@ namespace WPBot
             [JsonProperty(PropertyName = "ToplamKayit")]
             public string ToplamKayit { get; set; }
             [JsonProperty(PropertyName = "Limit")]
-            public string Limit { get; set; }
-
+            public string Limit { get; set; } 
             [JsonProperty(PropertyName = "IssFiltre")]
-            public string IssFiltre { get; set; } 
-
+            public string IssFiltre { get; set; }  
             [JsonProperty(PropertyName = "SayfaSayisi")]
-            public string SayfaSayisi { get; set; }
-
-
+            public string SayfaSayisi { get; set; } 
             [JsonProperty(PropertyName = "Sure")]
-            public string Sure { get; set; }
-
-
+            public string Sure { get; set; } 
             [JsonProperty(PropertyName = "BeklemeSuresi")]
-            public string BeklemeSuresi { get; set; }
-
+            public string BeklemeSuresi { get; set; } 
             [JsonProperty(PropertyName = "Mesaj")]
             public string Mesaj { get; set; }
             [JsonProperty(PropertyName = "ID")]
@@ -53,8 +42,7 @@ namespace WPBot
             [JsonProperty(PropertyName = "Baslik")]
             public string Baslik { get; set; }
             [JsonProperty(PropertyName = "Cinsiyet")]
-            public string Cinsiyet { get; set; }
-
+            public string Cinsiyet { get; set; } 
             [JsonProperty(PropertyName = "Hitap")]
             public string Hitap { get; set; }
 
@@ -66,5 +54,13 @@ namespace WPBot
         public static int limit { get; set; }
 
         public string _url = "http://orbilsis.com/smsapi/servis/";
+
+        public static void Exit()
+        {
+            foreach (var process in Process.GetProcessesByName("WPBot"))
+            {
+                process.Kill();
+            }
+        }
     }
 }
