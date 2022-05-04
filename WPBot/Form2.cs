@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Media;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WPBot
 {
@@ -235,7 +236,11 @@ namespace WPBot
         bool gonderimDurdur = false;
         int _sure = 0;
         int sure = 0;
-        private void button1_Click(object sender, EventArgs e)
+        public async Task Bekle(int sure)
+        {
+            await Task.Delay(sure*1000);  
+        }
+        private async void button1_Click(object sender, EventArgs e)
         {
 
 
@@ -256,21 +261,17 @@ namespace WPBot
                             //gonderildi info 
                             if (mesaj % Singleton.limit == 0)
                             {
+                                sure = Singleton.beklemeSuresi;
                                 sayac.Enabled = true;
-                                sure = Singleton.beklemeSuresi;//dakika olması için *60
-                            Bekle3: if (!bekleme)
-                                {
-                                    goto Bekle3;
-                                }
+
+                                await Bekle(Singleton.beklemeSuresi);
                             }
                             else
                             {
-                                sayac.Enabled = true;
                                 sure = Singleton.sure;
-                            Bekle2: if (!bekleme)
-                                {
-                                    goto Bekle2;
-                                }
+                                sayac.Enabled = true;
+
+                                await Bekle(Singleton.sure);
                             }
                         }
                     }
@@ -290,21 +291,17 @@ namespace WPBot
                             
                             if(mesaj%Singleton.limit==0)
                             {
+                                sure = Singleton.beklemeSuresi;
                                 sayac.Enabled = true;
-                                sure = Singleton.beklemeSuresi;//dakika olması için *60
-                            Bekle3: if (!bekleme)
-                                {
-                                    goto Bekle3;
-                                }
+                                
+                                await Bekle(Singleton.beklemeSuresi); 
                             }
                             else
-                            { 
-                                sayac.Enabled = true;
+                            {
                                 sure = Singleton.sure;
-                            Bekle2: if (!bekleme)
-                                {
-                                    goto Bekle2;
-                                }
+                                sayac.Enabled = true;
+
+                                await Bekle(Singleton.sure);
                             }
 
                             if (mesaj == Singleton.toplamKayit)
