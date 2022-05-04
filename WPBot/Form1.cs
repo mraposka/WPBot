@@ -205,7 +205,7 @@ namespace WPBot
             {
                 string tel = listBox1.Items[i].ToString();
                 Process.Start("whatsapp://send?phone=" + tel);
-                Thread.Sleep(2000);
+                Thread.Sleep(3000);
                 Graphics g = Graphics.FromImage(screenCapture);
                 g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, screenCapture.Size, CopyPixelOperation.SourceCopy);
                 var img = new Bitmap(screenCapture);

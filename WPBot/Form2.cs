@@ -6,8 +6,11 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Threading;
+using System.Drawing;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Media;
+using System.Threading;
 
 namespace WPBot
 {
@@ -64,6 +67,7 @@ namespace WPBot
         }
         private void Form2_Load(object sender, EventArgs e)
         {
+            notify_Icon.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             getSmsGrup();
             string siteUrl = singleton._url + "hazirsablongrup";
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
@@ -184,9 +188,11 @@ namespace WPBot
         }
         private void Gönder(string tel)
         {
+
+            SendKeys.Send("~");
             Random random = new Random();
             Process.Start("whatsapp://send?phone=" + tel + "&text=" + icerik[random.Next(0, icerik.Count)] + hitap[random.Next(hitap.Count)]);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             SendKeys.Send("~");
         }
         public void Gonderildi(string tel)
@@ -219,16 +225,20 @@ namespace WPBot
             }
             else
             {
+                bekleme = false;
                 _sure++;
                 LabelDegis(_sure.ToString() + ". saniye/" + sure.ToString());
             }
 
         }
         bool bekleme = false;
+        bool gonderimDurdur = false;
         int _sure = 0;
         int sure = 0;
         private void button1_Click(object sender, EventArgs e)
         {
+
+
             int mesaj = 0;
             for (int sayfa = 0; sayfa < Singleton.sayfaSayisi; sayfa++)
             {
@@ -236,55 +246,92 @@ namespace WPBot
                 {
                     for (int mesajSay = 0; mesajSay < listBox1.Items.Count; mesajSay++)
                     {
-                        mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderiliyor!";
-                        Thread.Sleep(100);
-                        Gönder(listBox1.Items[mesajSay].ToString());
-                        mesaj++;
-                        mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderildi!";
-                        //gonderildi info 
-                        sayac.Enabled = true;
-                        sure = Singleton.sure;
-                    Bekle: if (bekleme)
+                        if (!gonderimDurdur)
                         {
-                            bekleme = true;
+                            mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderiliyor!";
+                            listBox1.SelectedIndex = mesajSay;
+                            Gönder(listBox1.Items[mesajSay].ToString());
+                            mesaj++;
+                            mesajIndex.Text = (mesajSay + 1).ToString() + ". mesaj gönderildi!";
+                            //gonderildi info 
+                            if (mesaj % Singleton.limit == 0)
+                            {
+                                sayac.Enabled = true;
+                                sure = Singleton.beklemeSuresi;//dakika olması için *60
+                            Bekle3: if (!bekleme)
+                                {
+                                    goto Bekle3;
+                                }
+                            }
+                            else
+                            {
+                                sayac.Enabled = true;
+                                sure = Singleton.sure;
+                            Bekle2: if (!bekleme)
+                                {
+                                    goto Bekle2;
+                                }
+                            }
                         }
-                        else goto Bekle;
                     }
                 }
-                else
+                else if(listBox1.Items.Count >= Singleton.limit)
                 {
                     for (int limit = sayfa * Singleton.limit; limit <= Singleton.limit + (sayfa * Singleton.limit); limit++)
                     {
-                        mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderiliyor!";
-                        Gönder(listBox1.Items[limit].ToString());
-                        mesaj++;
-                        mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
-                        sayac.Enabled = true;
-                        sure = Singleton.sure;
-                    Bekle2: if (bekleme)
+                        if (!gonderimDurdur)
                         {
-                            bekleme = true;
-                        }
-                        else goto Bekle2;
-                        if (mesaj == Singleton.toplamKayit)
-                        {
-                            break;
+                            mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderiliyor!";
+                            listBox1.SelectedIndex = limit;
+                            Gönder
+                                (listBox1.Items[limit].ToString());
+                            mesaj++;
+                            mesajIndex.Text = (limit + 1).ToString() + ". mesaj gönderildi!";
+                            
+                            if(mesaj%Singleton.limit==0)
+                            {
+                                sayac.Enabled = true;
+                                sure = Singleton.beklemeSuresi;//dakika olması için *60
+                            Bekle3: if (!bekleme)
+                                {
+                                    goto Bekle3;
+                                }
+                            }
+                            else
+                            { 
+                                sayac.Enabled = true;
+                                sure = Singleton.sure;
+                            Bekle2: if (!bekleme)
+                                {
+                                    goto Bekle2;
+                                }
+                            }
+
+                            if (mesaj == Singleton.toplamKayit)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
-
-                sayac.Enabled = true;
-                sure = Singleton.beklemeSuresi;//dakika olması için *60
-            Bekle3: if (bekleme)
-                {
-                    bekleme = true;
-                }
-                else goto Bekle3;
+                 
                 if (mesaj == listBox1.Items.Count)
                 {
+                    NotifyIcon();
                     break;
                 }
             }
+        }
+        NotifyIcon notify_Icon = new NotifyIcon();
+        void NotifyIcon()
+        {
+            notify_Icon.Visible = true;
+            notify_Icon.Text = "Gönderim Tamamlandı!";
+            notify_Icon.BalloonTipTitle = "Mesaj Gönderimi";
+            notify_Icon.BalloonTipText = "Gönderim Tamamlandı!";
+            notify_Icon.BalloonTipIcon = ToolTipIcon.Info;
+            notify_Icon.ShowBalloonTip(2000);
+            SystemSounds.Beep.Play();
         }
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -305,6 +352,22 @@ namespace WPBot
             Form1 form1 = new Form1();
             this.Hide();
             form1.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Gönderimi durdurmak istiyor musunuz?", "Gönderim durduruluyor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                gonderimDurdur = true;
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
         }
     }
 }
