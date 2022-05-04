@@ -209,7 +209,7 @@ namespace WPBot
                 Graphics g = Graphics.FromImage(screenCapture);
                 g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, screenCapture.Size, CopyPixelOperation.SourceCopy);
                 var img = new Bitmap(screenCapture);
-                var ocr = new TesseractEngine(@"C:\Users\Can\Desktop\tessdata", "eng", EngineMode.Default);
+                var ocr = new TesseractEngine(@"tessdata", "eng", EngineMode.Default);
                 var page = ocr.Process(img);
                 if (page.GetText().Replace(" ", "").Contains("URL") || page.GetText().Replace(" ", "").Contains("TAMAM"))
                 {
@@ -242,9 +242,9 @@ namespace WPBot
 
         private void mesajGönderToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
+            Form2 form2 = new Form2();  
             this.Hide();
-            form2.Show();
+            form2.ShowDialog();
         }
     }
 }
