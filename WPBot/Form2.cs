@@ -29,8 +29,7 @@ namespace WPBot
         List<string> icerik = new List<string>();
         Singleton singleton = new Singleton();
         Sayac.Timer sayac;
-        NotifyIcon notify_Icon = new NotifyIcon();
-        bool bekleme = false;
+        NotifyIcon notify_Icon = new NotifyIcon(); 
         bool gonderimDurdur = false;
         int _sure = 0;
         int sure = 0;
@@ -224,14 +223,12 @@ namespace WPBot
             if (_sure == sure)
             {
                 _sure = 0;
-                sure = 0;
-                bekleme = true;
+                sure = 0; 
                 sayac.Enabled = false;
                 LabelDegis("Mola Bekleniyor!");
             }
             else
-            {
-                bekleme = false;
+            { 
                 _sure++;
                 LabelDegis(_sure.ToString() + ". saniye/" + sure.ToString());
             }
@@ -243,7 +240,8 @@ namespace WPBot
         }
         private async void button1_Click(object sender, EventArgs e)
         {
-            int mesaj = 0;
+            button2.Enabled = true;
+            try{ int mesaj = 0;
             for (int sayfa = 0; sayfa < Singleton.sayfaSayisi; sayfa++)
             {
                 if (listBox1.Items.Count < Singleton.limit)
@@ -275,8 +273,8 @@ namespace WPBot
                         }
                         else
                         {
-                            MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.ToString() + ". mesajda durduruldu.");
-                            LabelDegis("Gönderim " + mesajIndex.ToString() + ". sırada durduruldu.");
+                            MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.Text.Split('.')[0] + ". mesajda durduruldu.");
+                            LabelDegis("Gönderim " + mesajIndex.Text.Split('.')[0] + ". sırada durduruldu.");
                         }
                     }
                 }
@@ -315,8 +313,8 @@ namespace WPBot
                         }
                         else
                         {
-                            MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.ToString() + ". mesajda durduruldu.");
-                            LabelDegis("Gönderim " + mesajIndex.ToString() + ". sırada durduruldu.");
+                            MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.Text.Split('.')[0] + ". mesajda durduruldu.");
+                            LabelDegis("Gönderim " + mesajIndex.Text.Split('.')[0] + ". sırada durduruldu.");
                         }
                     }
                 }
@@ -327,6 +325,9 @@ namespace WPBot
                     break;
                 }
             }
+
+            }
+            catch(Exception ex) { MessageBox.Show("Hata oluştu." + ex.Message); }
         }
         void NotifyIcon()
         {
@@ -361,27 +362,38 @@ namespace WPBot
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            gonderimDurdur = !gonderimDurdur;
-            if (!gonderimDurdur)
+            try
             {
-                button2.BackgroundImage = WPBot.Properties.Resources.play;
-                LabelDegis("Gönderim devam ettiriliyor!");
-
-                sure = 3;
-                sayac.Enabled = true;
-
-                await Bekle(3);
-                int mesajIndex = Convert.ToInt32(molaSure.Text.Split('.')[0].Split(' ')[1]);
-                mesajIndex--;
-                for (int i = mesajIndex; i >= 0; i--)
+                gonderimDurdur = !gonderimDurdur; 
+                if (!gonderimDurdur)
                 {
-                    listBox1.Items.RemoveAt(i);
+                    button2.BackColor = Form.DefaultBackColor;
+                    button2.BackgroundImage = WPBot.Properties.Resources.play;
+                    LabelDegis("Gönderim devam ettiriliyor!");
+
+                    sure = 3;
+                    sayac.Enabled = true;
+
+                    await Bekle(3);
+                    int _mesajIndex = Convert.ToInt32(mesajIndex.Text.Split('.')[0]);
+                    _mesajIndex--;
+                    for (int i = _mesajIndex; i >= 0; i--)
+                    {
+                        listBox1.Items.RemoveAt(i);
+                    }
+                }
+                else
+                {
+                    button2.BackColor = Color.Gray;
+                    button2.BackgroundImage = WPBot.Properties.Resources.pause;
                 }
             }
-            else
+            catch (Exception)
             {
-                button2.BackgroundImage = WPBot.Properties.Resources.pause;
+                gonderimDurdur = true;
+                LabelDegis("Hata oluştu. Gönderim durduruldu. "+ mesajIndex.Text.Split('.')[0]+". sırada durduruldu.");
             }
+            
         }
 
     }
