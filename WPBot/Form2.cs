@@ -189,6 +189,7 @@ namespace WPBot
         }
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
             telefonCek();
         }
         private void Gönder(string tel)

@@ -61,7 +61,7 @@ namespace WPBot
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            Process.Start("whatsapp://");
+            MessageBox.Show("Whatsapp Desktop uygulamasını başlatın!");
         }
     }
 }
