@@ -368,6 +368,7 @@ namespace WPBot
                 gonderimDurdur = !gonderimDurdur; 
                 if (!gonderimDurdur)
                 {
+                    button1.Enabled = true;
                     button2.BackColor = Form.DefaultBackColor;
                     button2.BackgroundImage = WPBot.Properties.Resources.play;
                     LabelDegis("Gönderim devam ettiriliyor!");
@@ -382,9 +383,11 @@ namespace WPBot
                     {
                         listBox1.Items.RemoveAt(i);
                     }
+                    button1.PerformClick();
                 }
                 else
                 {
+                    button1.Enabled = false;
                     button2.BackColor = Color.Gray;
                     button2.BackgroundImage = WPBot.Properties.Resources.pause;
                 }
