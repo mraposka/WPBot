@@ -276,6 +276,7 @@ namespace WPBot
                         {
                             MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.Text.Split('.')[0] + ". mesajda durduruldu.");
                             LabelDegis("Gönderim " + mesajIndex.Text.Split('.')[0] + ". sırada durduruldu.");
+                                break;
                         }
                     }
                 }
@@ -316,6 +317,7 @@ namespace WPBot
                         {
                             MessageBox.Show("Gönderim durduruluyor. " + mesajIndex.Text.Split('.')[0] + ". mesajda durduruldu.");
                             LabelDegis("Gönderim " + mesajIndex.Text.Split('.')[0] + ". sırada durduruldu.");
+                                break;
                         }
                     }
                 }
