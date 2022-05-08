@@ -200,6 +200,7 @@ namespace WPBot
             Process.Start("whatsapp://send?phone=" + tel + "&text=" + icerik[random.Next(0, icerik.Count)] + hitap[random.Next(hitap.Count)]);
             Thread.Sleep(2000);
             SendKeys.Send("~");
+            Gonderildi(tel);
         }
         public void Gonderildi(string tel)
         {
