@@ -34,6 +34,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mesajGönderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +48,7 @@
             this.listBox1.ItemHeight = 24;
             this.listBox1.Location = new System.Drawing.Point(12, 72);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(371, 196);
+            this.listBox1.Size = new System.Drawing.Size(371, 148);
             this.listBox1.TabIndex = 2;
             // 
             // comboBox1
@@ -59,10 +63,11 @@
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(94, 274);
+            this.button1.Location = new System.Drawing.Point(16, 312);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(191, 46);
+            this.button1.Size = new System.Drawing.Size(367, 46);
             this.button1.TabIndex = 10;
             this.button1.Text = "Telefon Defteri Filtrele";
             this.button1.UseVisualStyleBackColor = true;
@@ -95,11 +100,59 @@
             this.mesajGönderToolStripMenuItem.Text = "Mesaj Gönder";
             this.mesajGönderToolStripMenuItem.Click += new System.EventHandler(this.mesajGönderToolStripMenuItem_Click_1);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(90, 237);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 24);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Bekleniyor";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(125, 273);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(20, 24);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "0";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(12, 273);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(107, 24);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Kayıt Sayısı:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(12, 237);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(72, 24);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Durum:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(401, 330);
+            this.ClientSize = new System.Drawing.Size(401, 370);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
@@ -125,6 +178,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mesajGönderToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 

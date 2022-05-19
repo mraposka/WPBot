@@ -128,7 +128,16 @@ namespace WPBot
                         for (int j = 0; j < records.Count; j++)
                         {
                             var record = records[j];
-                            if (record.Durum == "1" && record.IssFiltre == "1") listBox1.Items.Add("+90" + record.Telefon);
+                            if (record.Durum == "1" && record.IssFiltre == "1") 
+                            {
+                                if(record.Telefon[0]=='5')
+                                listBox1.Items.Add("+90" + record.Telefon);  
+                                else{
+                                    if (record.Telefon[0] == '0') { listBox1.Items.Add("+9" + record.Telefon); }
+                                    else if (record.Telefon[0] == '9') { listBox1.Items.Add("+" + record.Telefon); }
+                                    else if (record.Telefon[0] == '+') { listBox1.Items.Add(record.Telefon); }
+                                }
+                            }
                         }
                     }
                 }
@@ -158,25 +167,28 @@ namespace WPBot
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            menuStrip1.Items.Clear();
-            string grupId = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
-            string siteUrl = singleton._url + "hazirsablonliste/" + grupId;
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "GET";
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            if (httpResponse.StatusCode == HttpStatusCode.OK)
-            {
-                StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
-                string veri = okuyucu.ReadToEnd();
-                List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
-                for (int i = 0; i < records.Count; i++)
+            if (comboBox2.SelectedIndex != -1)
+            { 
+                menuStrip1.Items.Clear();
+                string grupId = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
+                string siteUrl = singleton._url + "hazirsablonliste/" + grupId;
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                if (httpResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    var record = records[i];
-                    menuStrip1.Items.Add(record.Baslik);
-                    ToolStripItem item = menuStrip1.Items[menuStrip1.Items.Count - 1];
-                    icerik.Add(record.Icerik);
-                    item.Tag = record.ID + ":" + record.Icerik;
+                    StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
+                    string veri = okuyucu.ReadToEnd();
+                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                    for (int i = 0; i < records.Count; i++)
+                    {
+                        var record = records[i];
+                        menuStrip1.Items.Add(record.Baslik);
+                        ToolStripItem item = menuStrip1.Items[menuStrip1.Items.Count - 1];
+                        icerik.Add(record.Icerik);
+                        item.Tag = record.ID + ":" + record.Icerik;
+                    }
                 }
             }
         }
@@ -190,7 +202,7 @@ namespace WPBot
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            telefonCek();
+            if(comboBox2.SelectedIndex!=-1)telefonCek();
         }
         private void Gönder(string tel)
         {
@@ -198,7 +210,7 @@ namespace WPBot
             SendKeys.Send("~");
             Random random = new Random();
             Process.Start("whatsapp://send?phone=" + tel + "&text=" + icerik[random.Next(0, icerik.Count)] + hitap[random.Next(hitap.Count)]);
-            Thread.Sleep(2000);
+            Thread.Sleep(2500);
             SendKeys.Send("~");
             Gonderildi(tel);
         }
@@ -207,10 +219,11 @@ namespace WPBot
             using (WebClient client = new WebClient())
             {
                 string postUrl = singleton._url + "mesajgonderildi";
-                client.UploadValues(postUrl, new NameValueCollection()
-                {
-                    { "Telefon", tel }
-                });
+                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+               {
+                   { "Telefon", tel.Replace("+90","") }
+               });
+                string result = System.Text.Encoding.UTF8.GetString(gelenYanit); 
             }
         }
         public void LabelDegis(string text)
@@ -238,7 +251,7 @@ namespace WPBot
         } 
         public async Task Bekle(int sure)
         {
-            await Task.Delay(sure * 1000);
+            await Task.Delay((sure+2) * 1000);
         }
         private async void button1_Click(object sender, EventArgs e)
         {
@@ -403,5 +416,16 @@ namespace WPBot
             
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Singleton.limit = 0;
+            Singleton.toplamKayit = 0;
+            Singleton.sayfaSayisi = 0;
+            Singleton.beklemeSuresi = 0; 
+            Singleton.sure = 0;
+            comboBox2.SelectedIndex = -1;
+            comboBox1.SelectedIndex = -1;
+            listBox1.Items.Clear();
+        }
     }
 }

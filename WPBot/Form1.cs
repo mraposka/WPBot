@@ -159,9 +159,11 @@ namespace WPBot
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            button1.Enabled = false;
+            label1.Text = "Listeleniyor";
             listBox1.Items.Clear();
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
-            string siteUrl = singleton._url + "SmsListeToplamLimit/" + hValue;
+            string siteUrl = singleton._url + "SmsFiltreToplamLimit/" + hValue;
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(siteUrl);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
@@ -174,6 +176,7 @@ namespace WPBot
                 Singleton.sayfaSayisi = Int32.Parse(record.SayfaSayisi);
                 Singleton.limit = Int32.Parse(record.Limit);
                 Singleton.toplamKayit = Int32.Parse(record.ToplamKayit);
+                label2.Text = record.ToplamKayit.ToString();
                 Singleton.sure = Int32.Parse(record.Sure);
                 Singleton.beklemeSuresi = Int32.Parse(record.BeklemeSuresi);
             }
@@ -188,18 +191,29 @@ namespace WPBot
                 {
                     StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
                     string veri = okuyucu.ReadToEnd();
-                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
+                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri); 
                     for (int j = 0; j < records.Count; j++)
                     {
+                        
                         var record = records[j];
-                        if (record.Durum == "1" && record.IssFiltre == "0") listBox1.Items.Add("+90" + record.Telefon);
+                        if (record.Telefon[0] =='5')
+                            listBox1.Items.Add("+90" + record.Telefon);
+                        else
+                        {
+                            if (record.Telefon[0] == '0') { listBox1.Items.Add("+9" + record.Telefon); }
+                            else if (record.Telefon[0] == '9') { listBox1.Items.Add("+" + record.Telefon); }
+                            else if (record.Telefon[0] == '+') { listBox1.Items.Add(record.Telefon); }
+                        }
                     }
                 }
             }
+            button1.Enabled = true;
+            label1.Text = "Listelendi";
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
+        { 
+            label1.Text = "Filtreleniyor";
             List<string> pasif = new List<string>();
             for (int i = 0; i < listBox1.Items.Count; i++)
             {
@@ -226,6 +240,7 @@ namespace WPBot
                 listBox1.Items.Remove(_pasif);
             }
             NotifyIcon();
+            label1.Text = "Bitti";
 
         }
         NotifyIcon notify_Icon = new NotifyIcon();
@@ -245,6 +260,6 @@ namespace WPBot
             Form2 form2 = new Form2();  
             this.Hide();
             form2.ShowDialog();
-        }
+        } 
     }
 }
