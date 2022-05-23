@@ -11,6 +11,8 @@ using System.Collections.Specialized;
 using System.Media;
 using System.Reflection;
 using Tesseract;
+using System.Threading.Tasks;
+
 namespace WPBot
 {
     public partial class Form1 : Form
@@ -121,45 +123,84 @@ namespace WPBot
             }
         }
 
-        public void TelefonDeaktif(string tel)
+        public async void TelefonDeaktif(string tel)
         {
-            using (WebClient client = new WebClient())
+            try
             {
-                string postUrl = singleton._url + "whatsappkontrol";
-                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+                using (WebClient client = new WebClient())
+                {
+                    string postUrl = singleton._url + "whatsappkontrol";
+                    var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
                {
                    { "Telefon", tel }
                });
-                string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
+                    string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
 
-                if (result != "1")
-                {
-                    MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
-                    TelefonDeaktif(tel);
+                    if (result != "1")
+                    {
+                        await Bekle(3);
+                        Listele();
+                        await Bekle(3);
+                        button1.PerformClick();
+                    }
                 }
             }
-        }
-        public void TelefonFiltrelendi(string tel)
-        {
-            using (WebClient client = new WebClient())
+            catch (Exception)
             {
-                string postUrl = singleton._url + "whatsappkontrolislem";
-                var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
+                await Bekle(3);
+                Listele();
+                await Bekle(3);
+                button1.PerformClick();
+            }
+        }
+        public async Task Bekle(int sure)
+        {
+            await Task.Delay((sure + 2) * 1000);
+        }
+        public async void TelefonFiltrelendi(string tel)
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    string postUrl = singleton._url + "whatsappkontrolislem";
+                    var gelenYanit = client.UploadValues(postUrl, new NameValueCollection()
                {
                    { "Telefon", tel }
                });
-                string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
+                    string result = System.Text.Encoding.UTF8.GetString(gelenYanit);
 
-                if (result != "1")
-                {
-                    MessageBox.Show("Hata Algılandı!", "Tekrar Deneniyor!");
-                    TelefonDeaktif(tel);
+                    if (result != "1")
+                    {
+                        await Bekle(3);
+                        Listele();
+                        await Bekle(3);
+                        button1.PerformClick();
+                    }
                 }
             }
+            catch (Exception)
+            {
+                await Bekle(3);
+                Listele();
+                await Bekle(3);
+                button1.PerformClick();
+            }
+           
         }
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private async void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = false;
+            Listele();
+            await Bekle(3);
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {  
+                Filtre();  
+        }
+        void Listele()
+        {
             label1.Text = "Listeleniyor";
             listBox1.Items.Clear();
             string hValue = ((ComboBoxItem)comboBox1.SelectedItem).HiddenValue;
@@ -191,12 +232,12 @@ namespace WPBot
                 {
                     StreamReader okuyucu = new StreamReader(httpResponse.GetResponseStream());
                     string veri = okuyucu.ReadToEnd();
-                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri); 
+                    List<Singleton.Uygulama> records = JsonConvert.DeserializeObject<List<Singleton.Uygulama>>(veri);
                     for (int j = 0; j < records.Count; j++)
                     {
-                        
+
                         var record = records[j];
-                        if (record.Telefon[0] =='5')
+                        if (record.Telefon[0] == '5')
                             listBox1.Items.Add("+90" + record.Telefon);
                         else
                         {
@@ -210,38 +251,46 @@ namespace WPBot
             button1.Enabled = true;
             label1.Text = "Listelendi";
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        { 
-            label1.Text = "Filtreleniyor";
-            List<string> pasif = new List<string>();
-            for (int i = 0; i < listBox1.Items.Count; i++)
-            {
-                string tel = listBox1.Items[i].ToString();
-                Process.Start("whatsapp://send?phone=" + tel);
-                Thread.Sleep(3000);
-                Graphics g = Graphics.FromImage(screenCapture);
-                g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, screenCapture.Size, CopyPixelOperation.SourceCopy);
-                var img = new Bitmap(screenCapture);
-                var ocr = new TesseractEngine(@"tessdata", "eng", EngineMode.Default);
-                var page = ocr.Process(img);
-                if (page.GetText().Replace(" ", "").Contains("URL") || page.GetText().Replace(" ", "").Contains("TAMAM"))
+        async void Filtre()
+        {
+            try
+            { 
+                label1.Text = "Filtreleniyor";
+                List<string> pasif = new List<string>();
+                for (int i = 0; i < listBox1.Items.Count; i++)
                 {
-                    pasif.Add(tel);
-                    TelefonDeaktif(tel.Replace("+90", ""));
+                    string tel = listBox1.Items[i].ToString();
+                    Process.Start("whatsapp://send?phone=" + tel);
+                    Thread.Sleep(3000);
+                    Graphics g = Graphics.FromImage(screenCapture);
+                    g.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, screenCapture.Size, CopyPixelOperation.SourceCopy);
+                    var img = new Bitmap(screenCapture);
+                    var ocr = new TesseractEngine(@"tessdata", "eng", EngineMode.Default);
+                    var page = ocr.Process(img);
+                    if (page.GetText().Replace(" ", "").Contains("URL") || page.GetText().Replace(" ", "").Contains("TAMAM"))
+                    {
+                        pasif.Add(tel);
+                        TelefonDeaktif(tel.Replace("+90", ""));
+                    }
+                    else
+                    {
+                        TelefonFiltrelendi(tel.Replace("+90", ""));
+                    }
                 }
-                else
+                foreach (string _pasif in pasif)
                 {
-                    TelefonFiltrelendi(tel.Replace("+90", ""));
+                    listBox1.Items.Remove(_pasif);
                 }
+                NotifyIcon();
+                label1.Text = "Bitti";
             }
-            foreach (string _pasif in pasif)
+            catch (Exception)
             {
-                listBox1.Items.Remove(_pasif);
+                await Bekle(3);
+                Listele();
+                await Bekle(3);
+                button1.PerformClick();
             }
-            NotifyIcon();
-            label1.Text = "Bitti";
-
         }
         NotifyIcon notify_Icon = new NotifyIcon();
         void NotifyIcon()
@@ -260,6 +309,14 @@ namespace WPBot
             Form2 form2 = new Form2();  
             this.Hide();
             form2.ShowDialog();
-        } 
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            await Bekle(3);
+            Listele();
+            await Bekle(3);
+            button1.PerformClick();
+        }
     }
 }
