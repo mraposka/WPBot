@@ -53,7 +53,7 @@ namespace WPBot
         public static int beklemeSuresi { get; set; }
         public static int limit { get; set; }
 
-        public string _url = "http://orbilsis.com/smsapi/servis/";
+        public string _url = "https://tescoinvest.xyz/servis/";
 
         public static void Exit()
         {
